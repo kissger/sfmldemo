@@ -15,6 +15,7 @@ public:
 
 	sf::TcpSocket* getSocket();
 	void sendEventMessage(sf::Event);
+	bool isConnected();
 
 private:
 	sf::TcpSocket server;
@@ -22,6 +23,7 @@ private:
 	unsigned short port;
 	bool isRunning;
 	sf::Thread input;
+	sf::Socket::Status status;
 
 	void send(std::string);
 	void send(MessageObject);
