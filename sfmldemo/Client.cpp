@@ -1,40 +1,32 @@
 #include "Client.h"
 
 /**
-* constructs a client with the given port and ip address, 
-* sets the default variables, and starts the input thread, 
+* constructs a client with the given port and ip address,
+* sets the default variables, and starts the input thread,
 * and also the manager thread for the client
 * @param unsigned int port
 * @param IpAddress IP address
 */
-Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname) : port(port_), address(addr_),
-	isRunning(true), canRemove(false), input(&Client::getInput, this)
+Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname) : address(addr_), port(port_),
+	isRunning(true), canRemove(false)/*, input(&Client::getInput, this)*/
 {
-	std::cout << "connecting...\n";
 	status = server.connect(address, port);
 	if (status == sf::Socket::Done) {
-		std::cout << "Connection established\n";
-		MessageObject hi(MessageObject::MESSAGES::CONN, nickname);
+		MessageObject hi(MessageObject::CONN, nickname);
 		send(hi);
-		sf::Thread manager(&Client::manageClient, this);
-		manager.launch();
-		input.launch();
 	}
-	else
-		std::cout << "Connection not established\n";
 }
 
-bool Client::isConnected()
+void Client::sendEventMessage(sf::Event& ev)
 {
-	if (status == sf::Socket::Done)
-		return true;
-	else
-		return false;
-}
-
-void Client::sendEventMessage(sf::Event ev)
-{
-	send(MessageObject::MESSAGES::MVMNT, "event sent");
+	std::stringstream ss;
+	std::string buf = "";
+	if (ev.mouseButton.button == sf::Mouse::Left && ev.type == ev.MouseButtonPressed) {
+		ss << ev.mouseButton.x << " " << ev.mouseButton.y;
+		std::getline(ss, buf);
+	}
+	if (buf!="")
+		send(MessageObject::MVMNT, "user clicked at: " + buf);
 }
 
 /**
@@ -45,8 +37,8 @@ void Client::manageClient()
 	while(isRunning)
 	{
 		MessageObject m = recieve();
-		std::cout << "server> " << m << std::endl;
-		if (m.type == MessageObject::MESSAGES::CMD && m.message == "shut")
+		//std::cout << "server> " << m << std::endl;
+		if (m.type == MessageObject::CMD && m.message == "shut")
 			shutDown();
 	}
 }
@@ -71,6 +63,14 @@ void Client::getInput()
 	}
 }
 
+bool Client::isConnected()
+{
+	if (status==sf::Socket::Done)
+		return true;
+	else
+		return false;
+}
+
 sf::TcpSocket* Client::getSocket()
 {
 	return &server;
@@ -92,7 +92,6 @@ void Client::send(std::string message)
 * sends a specific message
 * @param MessageObject
 */
-
 void Client::send(MessageObject message)
 {
 	sf::Packet packet;
@@ -131,8 +130,8 @@ MessageObject Client::recieve()
 */
 void Client::shutDown()
 {
-	std::cout << "Connection closed\nPress Enter to exit";
-	send(MessageObject::MESSAGES::CMD, "DISC");
+	//std::cout << "Connection closed\nPress Enter to exit";
+	send(MessageObject::CMD, "DISC");
 	isRunning = false;
 	server.disconnect();
 }

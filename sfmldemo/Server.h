@@ -1,11 +1,10 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <list>
 #include <iostream>
-#include "MessageObject.hpp"
+#include "MessageObject.h"
 #include "Client.h"
 #include "ClientManager.h"
 
@@ -22,18 +21,16 @@ private:
 	sf::TcpSocket client;
 	sf::SocketSelector selector;
 	bool isRunning;
-	sf::Thread input;
 
 	void waitForClients();
 	std::list<sf::TcpSocket*> clients;
 	std::list<ClientManager*> cms;
 	void getInput();
 	void shutDown();
+	void launch();
 	void send(std::string, sf::TcpSocket&);
 	void send(unsigned short, std::string, sf::TcpSocket&);
 	void send(MessageObject m, sf::TcpSocket&);
 	void sendAll(MessageObject);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
 };
-
-#endif //SERVER_H
