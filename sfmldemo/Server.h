@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SERVER_H
+#define SERVER_H
 
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
@@ -18,7 +19,7 @@ public:
 private:
 	unsigned int port;
 	sf::TcpListener listener;
-	sf::TcpSocket client;
+	//sf::TcpSocket client;
 	sf::SocketSelector selector;
 	bool isRunning;
 
@@ -33,4 +34,7 @@ private:
 	void send(MessageObject m, sf::TcpSocket&);
 	void sendAll(MessageObject);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
+	//void recieveTank(sf::TcpSocket&);
 };
+
+#endif //SERVER_H

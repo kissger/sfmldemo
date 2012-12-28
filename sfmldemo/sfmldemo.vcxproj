@@ -79,18 +79,14 @@
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientManager.cpp" />
-    <ClCompile Include="guielement.cpp" />
-    <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MessageObject.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientManager.h" />
-    <ClInclude Include="coord.hpp" />
-    <ClInclude Include="guielement.h" />
-    <ClInclude Include="Label.h" />
-    <ClInclude Include="MessageObject.hpp" />
+    <ClInclude Include="MessageObject.h" />
     <ClInclude Include="Server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -11,10 +11,16 @@ public:
 	~ClientManager();
 
 	sf::TcpSocket* getSocket();
+	std::string getNickname();
+	bool running();
+	void run();
 
 private:
-	unsigned int port;
-	sf::IpAddress address;
+	//unsigned int port;
+	//sf::IpAddress address;
 	std::string nickname;
 	sf::TcpSocket* client;
+	bool isRunning;
+
+	void process();
 };

@@ -159,7 +159,18 @@ void Server::sendAll(MessageObject m)
 		}
 	}
 }
-
+/*
+void Server::recieveTank(sf::TcpSocket& client)
+{
+    sf::Packet packet;
+    client.receive(packet);
+    std::stringstream ss;
+    ss.write((char*) packet.getData(), packet.getDataSize());
+    Tank tank;
+    ss >> tank;
+    std::cout << tank.getPosX() << " " << tank.getPosY() << " " << tank.getSizeX() << " " << tank.getSizeY() << " " << tank.getTypeID() << std::endl;
+}
+*/
 /**
 * sends a message object to the client
 * @param MessageObject
