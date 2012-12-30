@@ -21,10 +21,13 @@ struct MessageObject
 	std::string message;
 
 	MessageObject();
+	MessageObject::MessageObject(const MessageObject&);
 	MessageObject(std::string);
 	MessageObject(unsigned short, std::string);
 
 	std::string toString();
+
+	MessageObject& operator=(const MessageObject& rhs);
 };
 
 	std::ostream& operator<<(std::ostream&, const MessageObject&);
@@ -32,3 +35,5 @@ struct MessageObject
 	sf::Packet& operator<<(sf::Packet&, const MessageObject&);
 
 	sf::Packet& operator>>(sf::Packet&, MessageObject&);
+
+	bool operator==(const MessageObject& lhs, const MessageObject& rhs);
