@@ -22,7 +22,7 @@ std::string ClientManager::getNickname()
 	return nickname;
 }
 
-void ClientManager::shutdown()
+void ClientManager::shutDown()
 {
 	isRunning = false;
 	std::cout << "cms shut\n";
@@ -50,6 +50,8 @@ MessageObject ClientManager::getMessage()
 		MessageObject ret = msgs.front();
 		msgs.pop_front();
 		std::cout << "mgr " << nickname << "> " << ret << std::endl;
+		if (ret.type == MessageObject::CMD && ret.message == "DISC")
+			shutDown();
 		return ret;
 	}
 	else
@@ -63,7 +65,6 @@ void ClientManager::process()
 {
 	while(isRunning)
 	{
-		//std::cout << "loop " << nickname << " " << msgs.size() << std::endl;
 		sf::sleep(sf::milliseconds(10));
 		getMessage();
 	}

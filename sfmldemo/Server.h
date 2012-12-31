@@ -27,7 +27,7 @@ private:
 
 	void waitForClients();
 	//std::list<sf::TcpSocket*> clients;
-	std::map<std::string, std::deque<MessageObject>>* messages;
+	//std::map<std::string, std::deque<MessageObject>>* messages;
 	std::list<ClientManager*> cms;
 	void getInput();
 	void shutDown();
@@ -38,8 +38,6 @@ private:
 	void sendAll(MessageObject);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
 	//void recieveTank(sf::TcpSocket&);
-
-	void printmessages();
 };
 
 #endif //SERVER_H

@@ -13,7 +13,7 @@ Server::Server(unsigned int port_) : port(port_)
 	listener.listen(port);
 	selector.add(listener);
 	isRunning = true;
-	messages = new std::map<std::string, std::deque<MessageObject>>();
+	//messages = new std::map<std::string, std::deque<MessageObject>>();
 	launch();
 }
 
@@ -43,14 +43,11 @@ void Server::waitForClients()
 				if (listener.accept(*client) == sf::Socket::Done)
 				{
 					std::cout << "client connected " << client->getRemoteAddress() << std::endl;
-					std::cout << "mgr> "; // << recieve(*client) << std::endl;
+					std::cout << "mgr> ";
 					MessageObject m = recieve(*client);
 					std::cout << m.message << std::endl;
 					send("I'm not the server You're looking for...", *client);
-					//clients.push_back(client);
-					//std::deque<MessageObject> deq;
-					//(*messages)[m.message] = deq;
-					ClientManager* cm = new ClientManager(client, m.message/*, messages*/);
+					ClientManager* cm = new ClientManager(client, m.message);
 					cms.push_back(cm);
 					cm->run();
 					selector.add(*client);
@@ -72,8 +69,6 @@ void Server::waitForClients()
 						packet >> msg;
 						
 						if (status == sf::Socket::Done) {
-							//std::cout << "mgr " << cm->getNickname() << "> " << msg << std::endl;
-							//(*messages)[cm->getNickname()]//push_back(msg);
 							cm->appendMessage(msg);
 							sendAllExceptSender(msg, *client);
 						}
@@ -123,11 +118,8 @@ void Server::getInput()
 		if (in == "quit")
 		{
 			isRunning = false;
-			std::cout << "quit invoke\n";
 			shutDown();
 		}
-		else if (in == "print")
-			printmessages();
 		else
 		{
 			MessageObject m(in);
@@ -143,10 +135,8 @@ void Server::getInput()
 */
 void Server::sendAllExceptSender(MessageObject m, sf::TcpSocket& sender)
 {
-	//for (std::list<sf::TcpSocket*>::iterator it = clients.begin(); it!=clients.end(); ++it)
 	for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); ++it)
 	{
-		//sf::TcpSocket& client = **it;
 		ClientManager* cm = *it;
 		sf::TcpSocket* client = cm->getSocket();
 		if (client->getRemoteAddress() != sender.getRemoteAddress())
@@ -232,8 +222,13 @@ sf::Socket::Status Server::send(unsigned short i, std::string message, sf::TcpSo
 */
 void Server::shutDown()
 {
+	std::cout << cms.size() << std::endl;
 	MessageObject m(MessageObject::CMD, "shut");
-	sendAll(m);
+	if (cms.size()!=0) {
+		for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); ++it)
+			(*it)->shutDown();
+		sendAll(m);
+	}
 	listener.close();
 }
 
@@ -246,20 +241,7 @@ Server::~Server()
 	if (isRunning)
 		shutDown();
 
-	delete messages;
+	//delete messages;
 
 	std::cout << "server has been closed\n";
-}
-
-void Server::printmessages()
-{
-	for (std::map<std::string, std::deque<MessageObject>>::iterator it = messages->begin(); it!=messages->end(); ++it)
-	{
-		std::cout << it->first << ":\n";
-		for (std::deque<MessageObject>::iterator it2 = it->second.begin(); it2!=it->second.end(); ++it2)
-		{
-			std::cout << '\t' << *it2 << '\n';
-		}
-		std::cout << std::endl;
-	}
 }

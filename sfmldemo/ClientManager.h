@@ -15,7 +15,7 @@ public:
 	sf::TcpSocket* getSocket();
 	std::string getNickname();
 	bool running();
-	void shutdown();
+	void shutDown();
 	void run();
 
 	void appendMessage(const MessageObject&);
