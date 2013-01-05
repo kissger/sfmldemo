@@ -1,39 +1,81 @@
 #include "Client.h"
 
 /**
-* constructs a client with the given port and ip address,
-* sets the default variables, and starts the input thread,
+* constructs a client with the given port and ip address, 
+* sets the default variables, and starts the input thread, 
 * and also the manager thread for the client
 * @param unsigned int port
 * @param IpAddress IP address
 */
-Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname) : address(addr_), port(port_)
+Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname) : port(port_), address(addr_),
+	isRunning(true)
 {
+	std::cout << "connecting...\n";
 	status = server.connect(address, port);
-	if (status == sf::Socket::Done)
-	{
+	if (status == sf::Socket::Done) {
+		std::cout << "Connection established\n";
 		MessageObject hi(MessageObject::CONN, nickname);
 		send(hi);
 		launch();
 	}
+	else
+		std::cout << "Connection not established\n";
 }
 
+/*
+void Client::send(const Tank& tank)
+{
+	std::stringstream ss;
+	ss << tank;
+	sf::Packet packet;
+	packet.append(ss.str().c_str(), ss.str().size());
+	server.send(packet);
+}
+*/
+
+/**
+* launches the clients threads, one for managig communication, 
+* one for getting input from the console
+*/
 void Client::launch()
 {
-	manager = new sf::Thread(&Client::manageClient, this);
-	manager->launch();
+	sf::Thread manager(&Client::manageClient, this);
+	sf::Thread input(&Client::getInput, this);
+	manager.launch();
+	input.launch();
+}
+
+/**
+* @return bool true, if the connection to the server was successful
+*/
+bool Client::isConnected()
+{
+	return (status == sf::Socket::Done);
+}
+
+/**
+* @return TcpSocket pointer to the client's socket
+*/
+sf::TcpSocket* Client::getSocket()
+{
+	return &server;
 }
 
 void Client::sendEventMessage(sf::Event& ev)
 {
 	std::stringstream ss;
-	if (ev.mouseButton.button == sf::Mouse::Left && ev.type == ev.MouseButtonPressed)
+	if (ev.type == ev.MouseButtonReleased)
 	{
 		ss << ev.mouseButton.x << " " << ev.mouseButton.y;
+		if (ev.mouseButton.button == sf::Mouse::Right)
+		{
+			send(MessageObject::ACTION, "user shot/moved to " + ss.str());
+		}
+		else if (ev.mouseButton.button == sf::Mouse::Left)
+		{
+			send(MessageObject::MVMNT, "user clicked at: " + ss.str());
+		}
 	}
-	if (ss.str()!="")
-		send(MessageObject::MVMNT, "user clicked at: " + ss.str());
-
 }
 
 /**
@@ -43,9 +85,15 @@ void Client::manageClient()
 {
 	while(isRunning)
 	{
+		sf::sleep(sf::milliseconds(10));
 		MessageObject m = recieve();
+		messages.push_back(m);
+		std::cout << m << std::endl;
 		if (m.type == MessageObject::CMD && m.message == "shut")
+		{
+			isRunning = false;
 			shutDown();
+		}
 	}
 }
 
@@ -61,6 +109,13 @@ void Client::getInput()
 		getline(std::cin, in);
 		if (in=="quit")
 			shutDown();
+		/*else if (in=="tank")
+		{
+			MessageObject tankmsg(100, "tank");
+			send(tankmsg);
+			Tank t(11, 12, 13, 14, 15);
+			send(t);
+		}*/
 		else if (in!="")
 		{
 			MessageObject m(100, in);
@@ -69,35 +124,21 @@ void Client::getInput()
 	}
 }
 
-bool Client::isConnected()
-{
-	if (status==sf::Socket::Done)
-		return true;
-	else
-		return false;
-}
-
-sf::TcpSocket* Client::getSocket()
-{
-	return &server;
-}
-
 /**
 * sends a general message
 * @param string
 */
 void Client::send(std::string message)
 {
-	sf::Packet packet;
 	MessageObject m(100, message);
-	packet << m;
-	server.send(packet);
+	send(m);
 }
 
 /**
 * sends a specific message
 * @param MessageObject
 */
+
 void Client::send(MessageObject message)
 {
 	sf::Packet packet;
@@ -112,10 +153,8 @@ void Client::send(MessageObject message)
 */
 void Client::send(unsigned short type, std::string message)
 {
-	sf::Packet packet;
 	MessageObject m(type, message);
-	packet << m;
-	server.send(packet);
+	send(m);
 }
 
 /**
@@ -136,7 +175,7 @@ MessageObject Client::recieve()
 */
 void Client::shutDown()
 {
-	//std::cout << "Connection closed\nPress Enter to exit";
+	std::cout << "Connection closed\nPress Enter to exit";
 	send(MessageObject::CMD, "DISC");
 	isRunning = false;
 	server.disconnect();
@@ -149,5 +188,4 @@ Client::~Client()
 {
 	if (isRunning)
 		shutDown();
-	delete manager;
 }

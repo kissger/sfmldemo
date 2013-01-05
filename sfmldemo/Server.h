@@ -5,7 +5,6 @@
 #include <SFML/System.hpp>
 #include <list>
 #include <iostream>
-#include <map>
 #include <deque>
 #include "MessageObject.h"
 #include "Client.h"
@@ -21,14 +20,11 @@ public:
 private:
 	unsigned int port;
 	sf::TcpListener listener;
-	//sf::TcpSocket client;
 	sf::SocketSelector selector;
 	bool isRunning;
+	std::list<ClientManager*> cms;
 
 	void waitForClients();
-	//std::list<sf::TcpSocket*> clients;
-	//std::map<std::string, std::deque<MessageObject>>* messages;
-	std::list<ClientManager*> cms;
 	void getInput();
 	void shutDown();
 	void launch();
@@ -37,6 +33,7 @@ private:
 	sf::Socket::Status send(MessageObject m, sf::TcpSocket&);
 	void sendAll(MessageObject);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
+	void sendCurrentClients(sf::TcpSocket&);
 	//void recieveTank(sf::TcpSocket&);
 };
 

@@ -7,13 +7,12 @@
 */
 Server::Server(unsigned int port_) : port(port_)
 {
-	std::cout << "Server started\nListening on port " << port << std::endl;
-	std::cout << "public ip address: " << sf::IpAddress::getPublicAddress().toString() << std::endl
-			  << "local ip address " << sf::IpAddress::getLocalAddress() << std::endl;
+	std::cout << "Server started\nListening on port " << port << std::endl
+			  << "public ip address: " << sf::IpAddress::getPublicAddress().toString() << std::endl
+			  << "local ip address:  " << sf::IpAddress::getLocalAddress() << std::endl;
 	listener.listen(port);
 	selector.add(listener);
 	isRunning = true;
-	//messages = new std::map<std::string, std::deque<MessageObject>>();
 	launch();
 }
 
@@ -42,15 +41,16 @@ void Server::waitForClients()
 				sf::TcpSocket* client = new sf::TcpSocket;
 				if (listener.accept(*client) == sf::Socket::Done)
 				{
-					std::cout << "client connected " << client->getRemoteAddress() << std::endl;
-					std::cout << "mgr> ";
 					MessageObject m = recieve(*client);
-					std::cout << m.message << std::endl;
+					std::cout << "client connected " << client->getRemoteAddress() << std::endl
+							  << "mgr> " << m.message << std::endl;
 					send("I'm not the server You're looking for...", *client);
 					ClientManager* cm = new ClientManager(client, m.message);
+					sendCurrentClients(*client);
 					cms.push_back(cm);
 					cm->run();
 					selector.add(*client);
+					sendAllExceptSender(m, *client);
 				}
 			}
 			else
@@ -83,6 +83,7 @@ void Server::waitForClients()
 				}
 				if (toRemove!=0) {
 					delete toRemove;
+					managerToRemove->shutDown();
 					cms.remove(managerToRemove);
 					delete managerToRemove;
 				}
@@ -140,6 +141,7 @@ void Server::sendAllExceptSender(MessageObject m, sf::TcpSocket& sender)
 		ClientManager* cm = *it;
 		sf::TcpSocket* client = cm->getSocket();
 		if (client->getRemoteAddress() != sender.getRemoteAddress())
+		//if (client->getLocalPort() != sender.getLocalPort())
 			send(m, *client);
 	}
 }
@@ -164,11 +166,22 @@ void Server::sendAll(MessageObject m)
 			ClientManager* remove = cm;
 			it = cms.erase(it);
 			selector.remove(*socket);
+			cm->shutDown();
 			delete cm->getSocket();
 			delete cm;
 		}
 	}
 }
+
+void Server::sendCurrentClients(sf::TcpSocket& target)
+{
+	for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); it++)
+	{
+		MessageObject m(MessageObject::CONN, (*it)->getNickname());
+		send(m, target);
+	}
+}
+
 /*
 void Server::recieveTank(sf::TcpSocket& client)
 {
@@ -181,6 +194,7 @@ void Server::recieveTank(sf::TcpSocket& client)
     std::cout << tank.getPosX() << " " << tank.getPosY() << " " << tank.getSizeX() << " " << tank.getSizeY() << " " << tank.getTypeID() << std::endl;
 }
 */
+
 /**
 * sends a message object to the client
 * @param MessageObject
@@ -222,7 +236,6 @@ sf::Socket::Status Server::send(unsigned short i, std::string message, sf::TcpSo
 */
 void Server::shutDown()
 {
-	std::cout << cms.size() << std::endl;
 	MessageObject m(MessageObject::CMD, "shut");
 	if (cms.size()!=0) {
 		for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); ++it)
@@ -240,8 +253,6 @@ Server::~Server()
 {
 	if (isRunning)
 		shutDown();
-
-	//delete messages;
 
 	std::cout << "server has been closed\n";
 }

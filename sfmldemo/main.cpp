@@ -28,6 +28,10 @@ sf::IpAddress getip()
 	return addr;
 }
 
+/**
+* gets the nickname from the console
+* @return string
+*/
 std::string getNickname()
 {
 	std::string nick;
