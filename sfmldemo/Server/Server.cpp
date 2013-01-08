@@ -50,6 +50,8 @@ void Server::manageClientMessages()
 				{
 					std::cout << "no more player\n";
 					canConnect = false;
+					MessageObject m(MessageObject::START, "start");
+					sendAll(m);
 				}
 				if (msg.type == MessageObject::PLAYER && msg.message == "player")
 				{
