@@ -326,7 +326,7 @@ void Server::sendCurrentClients(sf::TcpSocket& target)
 {
 	for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); it++)
 	{
-		MessageObject m(MessageObject::CONN, (*it)->getNickname());
+		MessageObject m(MessageObject::ALLCT, (*it)->getNickname());
 		send(m, target);
 	}
 }
