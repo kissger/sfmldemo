@@ -93,6 +93,7 @@ void Tank::setHP(const short& HP)
 void Tank::setFiring(const bool& firing)
 {
 	this->firing = firing;
+	changed = true;
 }
 
 void Tank::setDestinationX(const short& destinationX)
@@ -159,8 +160,6 @@ std::istream& operator>>(std::istream& i, Tank& tank)
 	i.read((char*) &tank.tankAngle, sizeof(float));
 	i.read((char*) &tank.cannonAngle, sizeof(float));
 	i.read((char*) &tank.firing, sizeof(bool));
-
-    tank.init();
 
     return i;
 }

@@ -2,15 +2,16 @@
 #include "../Util/Utils.h"
 
 typedef std::string::size_type str_size_t;
+short Player::PLAYER_TANKS_COUNT = 7;
 
 Player::Player()
 {
-    addInitialTanks();
+    //addInitialTanks();
 }
 
 Player::Player(const std::string& name) : name(name)
 {
-    addInitialTanks();
+    //addInitialTanks();
 }
 
 Player::~Player()
@@ -62,7 +63,6 @@ bool Player::TankChangedPredicate::operator()(const Tank& tank)
 
 std::ostream& Player::serializeChanged(std::ostream& o)
 {
-
     size_t stringSize = name.size();
 
     o.write((char*) &stringSize, sizeof(str_size_t));
@@ -87,7 +87,6 @@ std::ostream& operator<<(std::ostream& o, const Player& player)
 
 std::istream& operator>>(std::istream& in, Player& player)
 {
-
     clearPointerContainer(player.tanks);
     player.selected = 0;
 
