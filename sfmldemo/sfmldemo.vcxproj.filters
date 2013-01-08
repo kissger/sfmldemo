@@ -13,75 +13,90 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Logic">
-      <UniqueIdentifier>{35bb12f9-2262-4eba-9a97-ec9296b8156c}</UniqueIdentifier>
+    <Filter Include="Header Files\Server">
+      <UniqueIdentifier>{28d68303-043b-4a2f-8e4f-a2fda2a96e69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server">
+      <UniqueIdentifier>{c8ecca44-72e6-425b-8e7e-f1887726f9c4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Logic">
-      <UniqueIdentifier>{27db3cde-5267-4413-ba28-551ed5fc4792}</UniqueIdentifier>
+      <UniqueIdentifier>{3fc8a4d8-34ff-46f7-a628-5a4b032274ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Util">
-      <UniqueIdentifier>{5cead777-dd4d-4e4d-b80a-da5714980174}</UniqueIdentifier>
+    <Filter Include="Source Files\Logic">
+      <UniqueIdentifier>{5ac1af53-0f64-4cfe-9e8a-3da9e66a1547}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Util">
-      <UniqueIdentifier>{cdef1daa-c70e-4784-b57d-f8a481014a8f}</UniqueIdentifier>
+      <UniqueIdentifier>{df327c6a-143f-4af3-826b-42cc79ae91de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{de4579e3-8f23-47e7-9d71-11c108870ff2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Server\Client.cpp">
+      <Filter>Source Files\Server</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Server\ClientManager.cpp">
+      <Filter>Source Files\Server</Filter>
     </ClCompile>
-    <ClCompile Include="ClientManager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Server\MessageObject.cpp">
+      <Filter>Source Files\Server</Filter>
     </ClCompile>
-    <ClCompile Include="MessageObject.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Server\Server.cpp">
+      <Filter>Source Files\Server</Filter>
     </ClCompile>
-    <ClCompile Include="Logic\Tank.cpp">
-      <Filter>Source Files\Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="Logic\Projectile.cpp">
-      <Filter>Source Files\Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="Logic\Player.cpp">
-      <Filter>Source Files\Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="Logic\Map.cpp">
-      <Filter>Source Files\Logic</Filter>
-    </ClCompile>
-    <ClCompile Include="Logic\TankTypes.cpp">
+    <ClCompile Include="Logic\AbstractEntity.cpp">
       <Filter>Source Files\Logic</Filter>
     </ClCompile>
     <ClCompile Include="Logic\Block.cpp">
       <Filter>Source Files\Logic</Filter>
     </ClCompile>
-    <ClCompile Include="Logic\AbstractEntity.cpp">
+    <ClCompile Include="Logic\Map.cpp">
       <Filter>Source Files\Logic</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Utils.cpp">
-      <Filter>Source Files\Util</Filter>
+    <ClCompile Include="Logic\Player.cpp">
+      <Filter>Source Files\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\Projectile.cpp">
+      <Filter>Source Files\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\Tank.cpp">
+      <Filter>Source Files\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="Logic\TankTypes.cpp">
+      <Filter>Source Files\Logic</Filter>
     </ClCompile>
     <ClCompile Include="Util\Convert.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Util\DebugWindow.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Utils.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Server.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Server\Client.h">
+      <Filter>Header Files\Server</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Server\ClientManager.h">
+      <Filter>Header Files\Server</Filter>
     </ClInclude>
-    <ClInclude Include="ClientManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Server\MessageObject.h">
+      <Filter>Header Files\Server</Filter>
     </ClInclude>
-    <ClInclude Include="MessageObject.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Server\Server.h">
+      <Filter>Header Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic\AbstractEntity.h">
+      <Filter>Header Files\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic\Block.h">
+      <Filter>Header Files\Logic</Filter>
     </ClInclude>
     <ClInclude Include="Logic\Map.h">
       <Filter>Header Files\Logic</Filter>
@@ -95,22 +110,19 @@
     <ClInclude Include="Logic\Tank.h">
       <Filter>Header Files\Logic</Filter>
     </ClInclude>
-    <ClInclude Include="Logic\Block.h">
-      <Filter>Header Files\Logic</Filter>
-    </ClInclude>
-    <ClInclude Include="Logic\AbstractEntity.h">
-      <Filter>Header Files\Logic</Filter>
-    </ClInclude>
     <ClInclude Include="Logic\TankTypes.h">
       <Filter>Header Files\Logic</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Utils.h">
+    <ClInclude Include="Util\Convert.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\DebugWindow.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Os.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Convert.h">
+    <ClInclude Include="Util\Utils.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>

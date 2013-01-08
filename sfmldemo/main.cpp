@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 
-#include "Server.h"
-#include "Client.h"
+#include "Server/Server.h"
+#include "Server/Client.h"
 
 /**
 * gets the port number from the console

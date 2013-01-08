@@ -14,6 +14,7 @@
     <ProjectGuid>{8DC3C7E8-0993-4633-8BD9-2682E80166BE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>sfmldemo</RootNamespace>
+    <ProjectName>server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,9 +40,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)SFML\bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)SFML\bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -49,14 +52,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;sfml-network-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\SFML-2.0-rc\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,17 +71,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-audio.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="ClientManager.cpp" />
     <ClCompile Include="Logic\AbstractEntity.cpp" />
     <ClCompile Include="Logic\Block.cpp" />
     <ClCompile Include="Logic\Map.cpp" />
@@ -87,14 +91,15 @@
     <ClCompile Include="Logic\Tank.cpp" />
     <ClCompile Include="Logic\TankTypes.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MessageObject.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Server\Client.cpp" />
+    <ClCompile Include="Server\ClientManager.cpp" />
+    <ClCompile Include="Server\MessageObject.cpp" />
+    <ClCompile Include="Server\Server.cpp" />
     <ClCompile Include="Util\Convert.cpp" />
+    <ClCompile Include="Util\DebugWindow.cpp" />
     <ClCompile Include="Util\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="ClientManager.h" />
     <ClInclude Include="Logic\AbstractEntity.h" />
     <ClInclude Include="Logic\Block.h" />
     <ClInclude Include="Logic\Map.h" />
@@ -102,9 +107,12 @@
     <ClInclude Include="Logic\Projectile.h" />
     <ClInclude Include="Logic\Tank.h" />
     <ClInclude Include="Logic\TankTypes.h" />
-    <ClInclude Include="MessageObject.h" />
-    <ClInclude Include="Server.h" />
+    <ClInclude Include="Server\Client.h" />
+    <ClInclude Include="Server\ClientManager.h" />
+    <ClInclude Include="Server\MessageObject.h" />
+    <ClInclude Include="Server\Server.h" />
     <ClInclude Include="Util\Convert.h" />
+    <ClInclude Include="Util\DebugWindow.h" />
     <ClInclude Include="Util\Os.h" />
     <ClInclude Include="Util\Utils.h" />
   </ItemGroup>
