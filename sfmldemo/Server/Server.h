@@ -31,6 +31,7 @@ private:
 
 	void initGameProtocol(sf::TcpSocket*);
 	void updatePlayers(sf::Packet&);
+	void recieveNewPlayer(sf::TcpSocket*);
 	void connectNewClient(sf::TcpSocket*);
 	void manageClientMessages();
 
@@ -43,6 +44,7 @@ private:
 	sf::Socket::Status send(MessageObject m, sf::TcpSocket&);
 	void sendAll(MessageObject);
 	void sendPacketAll(sf::Packet&);
+	void sendPacketAllExceptSender(sf::Packet&, sf::TcpSocket*);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
 	void sendCurrentClients(sf::TcpSocket&);
 };

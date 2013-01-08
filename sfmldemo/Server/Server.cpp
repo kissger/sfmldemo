@@ -53,6 +53,10 @@ void Server::manageClientMessages()
 					MessageObject m(MessageObject::START, "start");
 					sendAll(m);
 				}
+				if (msg.type == MessageObject::NEWPL && msg.message == "newplayer")
+				{
+					recieveNewPlayer(client);
+				}
 				if (msg.type == MessageObject::PLAYER && msg.message == "player")
 				{
 					sf::Mutex mutex;
@@ -126,7 +130,10 @@ void Server::initGameProtocol(sf::TcpSocket* client)
 {
 	//sending map
 	client->send(putToPacket(*map));
+}
 
+void Server::recieveNewPlayer(sf::TcpSocket* client)
+{
 	//recieving player
 	sf::Packet packet;
 	client->receive(packet);
@@ -134,9 +141,9 @@ void Server::initGameProtocol(sf::TcpSocket* client)
 	std::cout << "player connected: " << player->getName() << std::endl;
 
 	MessageObject m(MessageObject::NEWPL, "newplayer");
-	sendAll(m);
+	sendAllExceptSender(m, *client);
 	sf::Packet playerpacket = putToPacket(*player);
-	sendPacketAll(playerpacket);
+	sendPacketAllExceptSender(playerpacket, client);
 	/*std::vector<Tank*> tanks = player->getTanks();
 	for (int i = 0; tanks.size()<10 && i<tanks.size(); ++i)
 	{
@@ -250,6 +257,19 @@ void Server::sendPacketAll(sf::Packet& packet)
 	{
 		ClientManager* cm = *it;
 		cm->getSocket()->send(packet);
+	}
+	m.unlock();
+}
+
+void Server::sendPacketAllExceptSender(sf::Packet& packet, sf::TcpSocket* client)
+{
+	sf::Mutex m;
+	m.lock();
+	for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); it++)
+	{
+		ClientManager* cm = *it;
+		if (cm->getSocket()->getRemoteAddress()!=client->getRemoteAddress())
+			cm->getSocket()->send(packet);
 	}
 	m.unlock();
 }
