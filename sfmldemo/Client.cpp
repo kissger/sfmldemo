@@ -7,8 +7,8 @@
 * @param unsigned int port
 * @param IpAddress IP address
 */
-Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname) : port(port_), address(addr_),
-	isRunning(true)
+Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname_) : port(port_), address(addr_),
+	isRunning(true), nickname(nickname_)
 {
 	std::cout << "connecting...\n";
 	status = server.connect(address, port);
@@ -16,22 +16,27 @@ Client::Client(unsigned int port_, sf::IpAddress addr_, std::string nickname) : 
 		std::cout << "Connection established\n";
 		MessageObject hi(MessageObject::CONN, nickname);
 		send(hi);
+		
+		initGameProtocol();
+
 		launch();
 	}
 	else
 		std::cout << "Connection not established\n";
 }
 
-/*
-void Client::send(const Tank& tank)
+void Client::initGameProtocol()
 {
-	std::stringstream ss;
-	ss << tank;
+	//recieving map
 	sf::Packet packet;
-	packet.append(ss.str().c_str(), ss.str().size());
-	server.send(packet);
+	server.receive(packet);
+	map = getFromPacket<Map>(packet);
+
+	//create and send player
+	player = new Player(nickname);
+	server.send(putToPacket(*player));
+	map->add(player);
 }
-*/
 
 /**
 * launches the clients threads, one for managig communication, 
@@ -64,6 +69,11 @@ sf::TcpSocket* Client::getSocket()
 void Client::sendEventMessage(sf::Event& ev)
 {
 	std::stringstream ss;
+	if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Home)
+	{
+		MessageObject m(MessageObject::START, "start");
+		send(m);
+	}
 	if (ev.type == ev.MouseButtonReleased)
 	{
 		ss << ev.mouseButton.x << " " << ev.mouseButton.y;
@@ -89,10 +99,26 @@ void Client::manageClient()
 		MessageObject m = recieve();
 		messages.push_back(m);
 		std::cout << m << std::endl;
-		if (m.type == MessageObject::CMD && m.message == "shut")
+		if (m.type == MessageObject::UPD && m.message == "update")
+		{
+
+		}
+		else if (m.type == MessageObject::CMD && m.message == "shut")
 		{
 			isRunning = false;
 			shutDown();
+		}
+		else if (m.type==MessageObject::CMD && m.message == "tank")
+		{			
+			/*MessageObject m = recieve();
+			int n = strtoint(m.message);
+			for (int i = 0; i<n; ++i)
+			{
+				sf::Packet packet;
+				server.receive(packet);
+				Tank tank = getFromPacket<Tank>(packet);
+				std::cout << tank.getPosX() << " " << tank.getPosY() << " " << tank.getSizeX() << " " << tank.getSizeY() << " " << tank.getTypeID() << std::endl;
+			}*/
 		}
 	}
 }
@@ -109,13 +135,13 @@ void Client::getInput()
 		getline(std::cin, in);
 		if (in=="quit")
 			shutDown();
-		/*else if (in=="tank")
-		{
-			MessageObject tankmsg(100, "tank");
-			send(tankmsg);
-			Tank t(11, 12, 13, 14, 15);
-			send(t);
-		}*/
+		//else if (in=="tank")
+		//{
+			//MessageObject tankmsg(100, "tank");
+			//send(tankmsg);
+			//Tank t(11, 12, 13, 14, 15);
+			//send(t);
+		//}
 		else if (in!="")
 		{
 			MessageObject m(100, in);
@@ -188,4 +214,6 @@ Client::~Client()
 {
 	if (isRunning)
 		shutDown();
+	//delete player;
+	delete map;
 }

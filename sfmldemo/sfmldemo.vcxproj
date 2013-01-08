@@ -50,13 +50,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\sfgui\dist\include;C:\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfgui-d.lib;sfml-main-d.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;sfml-network-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\sfgui\dist\lib;C:\SFML-2.0-rc\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;sfml-network-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SFML-2.0-rc\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,15 +79,34 @@
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientManager.cpp" />
+    <ClCompile Include="Logic\AbstractEntity.cpp" />
+    <ClCompile Include="Logic\Block.cpp" />
+    <ClCompile Include="Logic\Map.cpp" />
+    <ClCompile Include="Logic\Player.cpp" />
+    <ClCompile Include="Logic\Projectile.cpp" />
+    <ClCompile Include="Logic\Tank.cpp" />
+    <ClCompile Include="Logic\TankTypes.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MessageObject.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Util\Convert.cpp" />
+    <ClCompile Include="Util\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientManager.h" />
+    <ClInclude Include="Logic\AbstractEntity.h" />
+    <ClInclude Include="Logic\Block.h" />
+    <ClInclude Include="Logic\Map.h" />
+    <ClInclude Include="Logic\Player.h" />
+    <ClInclude Include="Logic\Projectile.h" />
+    <ClInclude Include="Logic\Tank.h" />
+    <ClInclude Include="Logic\TankTypes.h" />
     <ClInclude Include="MessageObject.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Util\Convert.h" />
+    <ClInclude Include="Util\Os.h" />
+    <ClInclude Include="Util\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

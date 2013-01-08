@@ -1,5 +1,4 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
@@ -9,6 +8,9 @@
 #include "MessageObject.h"
 #include "Client.h"
 #include "ClientManager.h"
+#include "Util/Convert.h"
+#include "Logic/Map.h"
+#include "Util/Utils.h"
 
 class Server
 {
@@ -22,7 +24,16 @@ private:
 	sf::TcpListener listener;
 	sf::SocketSelector selector;
 	bool isRunning;
+	bool canConnect;
 	std::list<ClientManager*> cms;
+	Map* map;
+	//sf::Mutex mutex;
+	Player* player;
+
+	void initGameProtocol(sf::TcpSocket*);
+	void updatePlayers(sf::Packet&);
+	void connectNewClient(sf::TcpSocket*);
+	void manageClientMessages();
 
 	void waitForClients();
 	void getInput();
@@ -32,9 +43,9 @@ private:
 	sf::Socket::Status send(unsigned short, std::string, sf::TcpSocket&);
 	sf::Socket::Status send(MessageObject m, sf::TcpSocket&);
 	void sendAll(MessageObject);
+	void sendPacketAll(sf::Packet&);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
 	void sendCurrentClients(sf::TcpSocket&);
-	//void recieveTank(sf::TcpSocket&);
-};
 
-#endif //SERVER_H
+	std::vector<const Block*> makeBlocks(const short&);
+};

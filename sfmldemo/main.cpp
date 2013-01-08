@@ -42,7 +42,26 @@ std::string getNickname()
 
 int main()
 {
-	
+	/*
+	std::vector<Block*> blocks;
+	blocks.push_back(new Block(10, 10, 10, 10));
+
+	sf::Packet packet = putPointerContainerToPacket(blocks);
+	std::vector<Block*> result;
+	getPointerContainerFromPacket<Block>(packet, result);
+	std::cout << result[0]->getPosX() << " " << result[0]->getPosY() << std::endl;
+
+	std::vector<Tank*> tanks;
+	tanks.push_back(new Tank(78, 0, 0, 0, 0));
+    tanks.push_back(new Tank(78, 0, 0, 0, 0));
+    tanks.push_back(new Tank(78, 0, 0, 99, 0));
+
+	packet = putPointerContainerToPacket(tanks);
+	std::vector<Tank*> rtank;
+	getPointerContainerFromPacket<Tank>(packet, rtank);
+	std::cout << rtank[0]->getPosX() << " " << rtank[0]->getPosY() << std::endl;
+	*/
+
 	char c = ' ';
 	std::cout << "Server - s, Client c\n";
 	std::cin >> c;
