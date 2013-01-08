@@ -15,7 +15,7 @@ Server::Server(unsigned int port_) : port(port_)
 	selector.add(listener);
 	isRunning = true;
 	canConnect = true;
-	map = new Map(700, 700, makeBlocks(15));
+	map = new Map(700, 700);
 	player = new Player();
 	launch();
 }
@@ -240,16 +240,6 @@ void Server::getInput()
 			sendAll(m);
 		}
 	}
-}
-
-std::vector<const Block*> Server::makeBlocks(const short& n)
-{
-	std::vector<const Block*> ret;
-	for (short i = 0; i<n; ++i)
-	{
-		ret.push_back(new Block(rand()%630+30, rand()%630+30, 35, 35));
-	}
-	return ret;
 }
 
 void Server::sendPacketAll(sf::Packet& packet)

@@ -27,7 +27,6 @@ private:
 	bool canConnect;
 	std::list<ClientManager*> cms;
 	Map* map;
-	//sf::Mutex mutex;
 	Player* player;
 
 	void initGameProtocol(sf::TcpSocket*);
@@ -46,6 +45,4 @@ private:
 	void sendPacketAll(sf::Packet&);
 	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
 	void sendCurrentClients(sf::TcpSocket&);
-
-	std::vector<const Block*> makeBlocks(const short&);
 };
