@@ -27,10 +27,10 @@ private:
 	bool canConnect;
 	std::list<ClientManager*> cms;
 	Map* map;
-	Player* player;
+	Player* playa;
 
 	void initGameProtocol(sf::TcpSocket*);
-	void updatePlayers(sf::Packet&);
+	void updatePlayers(sf::Packet&, sf::TcpSocket*);
 	void recieveNewPlayer(sf::TcpSocket*);
 	void connectNewClient(sf::TcpSocket*);
 	void manageClientMessages();
@@ -38,6 +38,7 @@ private:
 	void waitForClients();
 	void getInput();
 	void shutDown();
+	void restartAll();
 	void launch();
 	sf::Socket::Status send(std::string, sf::TcpSocket&);
 	sf::Socket::Status send(unsigned short, std::string, sf::TcpSocket&);
@@ -45,6 +46,6 @@ private:
 	void sendAll(MessageObject);
 	void sendPacketAll(sf::Packet&);
 	void sendPacketAllExceptSender(sf::Packet&, sf::TcpSocket*);
-	void sendAllExceptSender(MessageObject, sf::TcpSocket&);
+	void sendAllExceptSender(MessageObject, sf::TcpSocket*);
 	void sendCurrentClients(sf::TcpSocket&);
 };

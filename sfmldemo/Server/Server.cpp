@@ -16,7 +16,7 @@ Server::Server(unsigned int port_) : port(port_)
 	isRunning = true;
 	canConnect = true;
 	map = new Map(700, 700);
-	player = new Player();
+	playa = new Player();
 	launch();
 }
 
@@ -56,6 +56,7 @@ void Server::manageClientMessages()
 				if (msg.type == MessageObject::NEWPL && msg.message == "newplayer")
 				{
 					recieveNewPlayer(client);
+					//cm->appendMessage(msg);
 				}
 				if (msg.type == MessageObject::PLAYER && msg.message == "player")
 				{
@@ -71,7 +72,7 @@ void Server::manageClientMessages()
 					//Player player;
 					std::cout << "player update: " << plocal->getName() << std::endl;
 					map->updatePlayer(plocal);
-					updatePlayers(putToPacket(*plocal));
+					updatePlayers(putToPacket(*plocal), client);
 					mutex.unlock();
 				}
 				else
@@ -104,6 +105,10 @@ void Server::manageClientMessages()
 		delete managerToRemove;
 		m.unlock();
 	}
+	if (cms.size() == 0)
+	{
+		restartAll();
+	}
 }
 
 void Server::connectNewClient(sf::TcpSocket* client)
@@ -120,7 +125,7 @@ void Server::connectNewClient(sf::TcpSocket* client)
 	cms.push_back(cm);
 	cm->run();
 	selector.add(*client);
-	sendAllExceptSender(m, *client);
+	sendAllExceptSender(m, client);
 
 	//sending hi message
 	send("I'm not the server You're looking for...", *client);
@@ -141,9 +146,11 @@ void Server::recieveNewPlayer(sf::TcpSocket* client)
 	std::cout << "player connected: " << player->getName() << std::endl;
 
 	MessageObject m(MessageObject::NEWPL, "newplayer");
-	sendAllExceptSender(m, *client);
+	sendAllExceptSender(m, client);
+	//sendAll(m);
 	sf::Packet playerpacket = putToPacket(*player);
 	sendPacketAllExceptSender(playerpacket, client);
+	//sendPacketAll(playerpacket);
 	/*std::vector<Tank*> tanks = player->getTanks();
 	for (int i = 0; tanks.size()<10 && i<tanks.size(); ++i)
 	{
@@ -184,10 +191,12 @@ void Server::waitForClients()
 	}
 }
 
-void Server::updatePlayers(sf::Packet& packet)
+void Server::updatePlayers(sf::Packet& packet, sf::TcpSocket* client)
 {
 	MessageObject update(MessageObject::UPD, "update");
+	//sendAllExceptSender(update, client);
 	sendAll(update);
+	//sendPacketAllExceptSender(packet, client);
 	sendPacketAll(packet);
 }
 
@@ -279,13 +288,13 @@ void Server::sendPacketAllExceptSender(sf::Packet& packet, sf::TcpSocket* client
 * @param MessageObject the message
 * @param TcpSocket the sender
 */
-void Server::sendAllExceptSender(MessageObject m, sf::TcpSocket& sender)
+void Server::sendAllExceptSender(MessageObject m, sf::TcpSocket* sender)
 {
 	for (std::list<ClientManager*>::iterator it = cms.begin(); it!=cms.end(); ++it)
 	{
 		ClientManager* cm = *it;
 		sf::TcpSocket* client = cm->getSocket();
-		if (client->getRemoteAddress() != sender.getRemoteAddress())
+		if (client->getRemoteAddress() != sender->getRemoteAddress())
 		//if (client->getLocalPort() != sender.getLocalPort())
 			send(m, *client);
 	}
@@ -366,6 +375,14 @@ sf::Socket::Status Server::send(unsigned short i, std::string message, sf::TcpSo
 	return send(m, client);
 }
 
+void Server::restartAll()
+{
+	std::cout << "server> everybody shot down, restarting...\n";
+	canConnect = true;
+	delete map;
+	map = new Map(700, 700);
+}
+
 /**
 * shuts down the server<br>
 * sends a shutdown command message to all the clients, and closes the connection
@@ -390,6 +407,6 @@ Server::~Server()
 	if (isRunning)
 		shutDown();
 	delete map;
-	delete player;
+	delete playa;
 	std::cout << "server has been closed\n";
 }
