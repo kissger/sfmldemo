@@ -50,8 +50,8 @@ void Server::manageClientMessages()
 				{
 					std::cout << "no more player\n";
 					canConnect = false;
-					MessageObject m(MessageObject::START, "start");
-					sendAll(m);
+					//MessageObject m(MessageObject::START, "start");
+					//sendAll(m);
 				}
 				if (msg.type == MessageObject::NEWPL && msg.message == "newplayer")
 				{
@@ -194,10 +194,10 @@ void Server::waitForClients()
 void Server::updatePlayers(sf::Packet& packet, sf::TcpSocket* client)
 {
 	MessageObject update(MessageObject::UPD, "update");
-	//sendAllExceptSender(update, client);
-	sendAll(update);
-	//sendPacketAllExceptSender(packet, client);
-	sendPacketAll(packet);
+	sendAllExceptSender(update, client);
+	//sendAllexc(update);
+	sendPacketAllExceptSender(packet, client);
+	//sendPacketAll(packet);
 }
 
 /**
