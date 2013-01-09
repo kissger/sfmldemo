@@ -46,6 +46,10 @@ void Server::manageClientMessages()
 			packet >> msg;
 						
 			if (status == sf::Socket::Done) {
+				//if (msg.type == MessageObject::GAMOV && msg.message == "gameover")
+				//{
+
+				//}
 				if (msg.type == MessageObject::START && msg.message == "start")
 				{
 					std::cout << "no more player\n";
@@ -279,7 +283,7 @@ void Server::sendPacketAllExceptSender(sf::Packet& packet, sf::TcpSocket* client
 		ClientManager* cm = *it;
 		if (cm->getSocket()->getRemoteAddress()!=client->getRemoteAddress())
 		{
-			std::cout << cm->getSocket()->getRemoteAddress() << " " << client->getRemoteAddress() << std::endl;
+			//std::cout << cm->getSocket()->getRemoteAddress() << " " << client->getRemoteAddress() << std::endl;
 			cm->getSocket()->send(packet);
 		}
 	}
@@ -299,7 +303,7 @@ void Server::sendAllExceptSender(MessageObject m, sf::TcpSocket* sender)
 		sf::TcpSocket* client = cm->getSocket();
 		if (client->getRemoteAddress() != sender->getRemoteAddress())
 		{
-			std::cout << client->getRemoteAddress() << " " << sender->getRemoteAddress() << std::endl;
+			//std::cout << client->getRemoteAddress() << " " << sender->getRemoteAddress() << std::endl;
 			send(m, *client);
 		}
 	}

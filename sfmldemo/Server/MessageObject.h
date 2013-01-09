@@ -21,6 +21,8 @@ struct MessageObject
 	PLAYER= 305, //player object
 	MAP   = 306, //map object
 	ACTION= 400, //action message
+	//DEAD  = 401, //player died
+	//GAMOV = 402, //game over
 	DISC  = 501, //disconnect
 	ERR   = 500  //general error message
 	};

@@ -121,7 +121,8 @@ Tank* Map::getTankOnPosition(const short& posX, const short& posY, Tank* thisTan
 
 		for(auto tankIter = (*playerIter)->getTanks().cbegin(); tankIter != (*playerIter)->getTanks().cend(); ++tankIter)
 
-			if(thisTank != *tankIter && isEntityOnPosition(*tankIter, (*tankIter)->getPosX(), (*tankIter)->getPosY(), posX, posY, 20))
+			if(thisTank != *tankIter && (*tankIter)->getHP() != 0
+				&& isEntityOnPosition(*tankIter, (*tankIter)->getPosX(), (*tankIter)->getPosY(), posX, posY, 20))
 				return *tankIter;
 
 	return 0;
