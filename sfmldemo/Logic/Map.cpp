@@ -72,13 +72,13 @@ void Map::updatePlayer(Player* const player)
 		if(player->getName() == players[i]->getName())
 		{
 			Player* thisPlayer = players[i];
+			thisPlayer->setFirePosX(player->getFirePosX());
+			thisPlayer->setFirePosY(player->getFirePosY());
 
 			for(unsigned int j = 0; j < player->getTanks().size(); ++j)
 			{
 				Tank* updatedTank = player->getTanks()[j];
-				
-				delete thisPlayer->getTanks()[updatedTank->getID()];
-				thisPlayer->getTanks()[player->getTanks()[j]->getID()] = updatedTank;
+				*(thisPlayer->getTanks()[player->getTanks()[j]->getID()]) = *updatedTank;
 			}
 
 			return;

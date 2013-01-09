@@ -34,9 +34,28 @@ const Tank* const Player::getSelected() const
     return selected;
 }
 
+const short& Player::getFirePosX() const
+{
+	return firePosX;
+}
+const short& Player::getFirePosY() const
+{
+	return firePosY;
+}
+
 void Player::setSelected(Tank* const selected)
 {
     this->selected = selected;
+}
+
+void Player::setFirePosX(const short& posX)
+{
+	this->firePosX = posX;
+}
+
+void Player::setFirePosY(const short& posY)
+{
+	this->firePosY = posY;
 }
 
 void Player::addTank(Tank* const tank)
@@ -47,12 +66,6 @@ void Player::addTank(Tank* const tank)
 void Player::addInitialTanks()
 {
 
-    selected = 0;
-
-    /// TODO: hozzáadni tankokat
-    tanks.push_back(new Tank(78, 0, 0, 0, 0, 0));
-    tanks.push_back(new Tank(78, 0, 0, 0, 1, 0));
-    tanks.push_back(new Tank(78, 0, 0, 99, 2, 0));
 }
 
 bool Player::TankChangedPredicate::operator()(const Tank& tank)
@@ -66,6 +79,8 @@ std::ostream& Player::serializeChanged(std::ostream& o)
 
     o.write((char*) &stringSize, sizeof(str_size_t));
     o.write(name.c_str(), name.size());
+	o.write((char*) &firePosX, sizeof(short));
+	o.write((char*) &firePosY, sizeof(short));
 
     serializePointerContainer(tanks.cbegin(), tanks.cend(), o, TankChangedPredicate());
 
@@ -78,6 +93,8 @@ std::ostream& operator<<(std::ostream& o, const Player& player)
 
     o.write((char*) &stringSize, sizeof(str_size_t));
     o.write(player.name.c_str(), player.name.size());
+	o.write((char*) &player.firePosX, sizeof(short));
+	o.write((char*) &player.firePosY, sizeof(short));
 
     serializePointerContainer(player.tanks.cbegin(), player.tanks.cend(), o);
 
@@ -87,7 +104,6 @@ std::ostream& operator<<(std::ostream& o, const Player& player)
 std::istream& operator>>(std::istream& in, Player& player)
 {
     clearPointerContainer(player.tanks);
-    player.selected = 0;
 
     str_size_t stringSize;
 
@@ -99,6 +115,9 @@ std::istream& operator>>(std::istream& in, Player& player)
     text[stringSize] = 0;
 
     player.name = std::string(text);
+
+	in.read((char*) &player.firePosX, sizeof(short));
+	in.read((char*) &player.firePosY, sizeof(short));
 
     deserializePointerContainer<Tank>(player.tanks, in);
 

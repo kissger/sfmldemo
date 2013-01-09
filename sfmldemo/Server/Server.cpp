@@ -278,7 +278,10 @@ void Server::sendPacketAllExceptSender(sf::Packet& packet, sf::TcpSocket* client
 	{
 		ClientManager* cm = *it;
 		if (cm->getSocket()->getRemoteAddress()!=client->getRemoteAddress())
+		{
+			std::cout << cm->getSocket()->getRemoteAddress() << " " << client->getRemoteAddress() << std::endl;
 			cm->getSocket()->send(packet);
+		}
 	}
 	m.unlock();
 }
@@ -295,8 +298,10 @@ void Server::sendAllExceptSender(MessageObject m, sf::TcpSocket* sender)
 		ClientManager* cm = *it;
 		sf::TcpSocket* client = cm->getSocket();
 		if (client->getRemoteAddress() != sender->getRemoteAddress())
-		//if (client->getLocalPort() != sender.getLocalPort())
+		{
+			std::cout << client->getRemoteAddress() << " " << sender->getRemoteAddress() << std::endl;
 			send(m, *client);
+		}
 	}
 }
 
